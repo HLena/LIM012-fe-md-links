@@ -1,0 +1,13 @@
+test de integracion -> estas probando todo el funcionamiento
+
+preguntas
+- se debe testear tanto las funciones para el CLI y API 
+- los testeos deben ser especificos o generales(probando ejemplos)
+- issues y milestone
+
+
+casos:
+caso 1 -> solo path 
+caso 2 -> solo validate
+caso 3 -> solo stats
+caso 4 -> valida y stats
