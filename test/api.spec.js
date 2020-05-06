@@ -41,10 +41,10 @@ const outputLinks_validate = [
 
 const stats = { total: 4, unique: 4 };
 const stats_validate = { total: 4, unique: 4, broken: 0 };
-const mypath = '../src/example.md';
 
 describe('mdlikns', () => {
   it('recive a valid path (../src/example.md) and return an array of objects', (done) => {
+    // const mypath = '../src/example.md';
     function callback(mypath, options) {
       try {
         expect(api.mdLinks(mypath, options)).toBe('object');
@@ -53,7 +53,7 @@ describe('mdlikns', () => {
         done(error);
       }
     }
-    api.mdLinks(callback('homt/ghlena/Desktop/laboratoria', '--validate'));
+    api.mdLinks(callback('../src/example.md', '--validate'));
   });
 });
 

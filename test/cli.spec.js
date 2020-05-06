@@ -1,5 +1,5 @@
 const cli = require('../src/cli');
-const api = require('..src/api');
+const api = require('../src/api');
 
 
 // /home/ghlena/desktop/laboratoria/Lim/ debe de retornenar verdadero
@@ -16,20 +16,11 @@ const api = require('..src/api');
 
 // test for CLI
 describe('CLI', () => {
-  it('cli should be a function', () => {
-    expect(typeof cli.CommandLineInteface).toBe('function');
-  });
-  it('validtePath should be a function', () => {
-    expect(typeof cli.validatePath).toBe('function');
-  });
   it('return true when path is /home/ghlena/desktop/laboratoria/', () => {
     expect(cli.validatePath('/home/ghlena/desktop/laboratoria/')).toBeTruthy();
   });
   it('return false when path is /home/ghlena/desktop.algo/laboratoria/', () => {
     expect(cli.validatePath('/home/ghlena/desktop!algo/laboratoria/')).toBeFalsy();
-  });
-  it('validateOptions should be a function', () => {
-    expect(typeof cli.validateCommands).toBe('function');
   });
   it('Return a number between 1 to 4 when options is valid and zero when there is a error', () => {
     const options = [0, 1, 2, 3, 4];
@@ -44,16 +35,6 @@ describe('CLI', () => {
     expect(cli.validateCommands(323, '#')).toBe(0);
   });
 });
-
-
-const mocks = [];
-//  test con paths y opciones validos
-describe('return a list of a links', () => {
-  it('mdlinks should be a function', () => {
-    expect(api.mdLinks()).toBe(mocks);
-  });
-});
-
 
 // tests con la lista de links returnado
 describe('return a list of a links', () => {
