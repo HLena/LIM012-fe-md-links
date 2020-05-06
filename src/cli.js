@@ -4,76 +4,72 @@ const isValid = require('is-valid-path');
 const api = require('./api');
 
 const validatePath = (mypath) => !!(isValid(mypath));
-// let options = { validate: false };
 
-const validateCommands = (opt1, opt2) => {
-  let caseOption = 0;
-  if (opt1 === '--validate' && opt2 === '--stats') {
-    // options = { validate: true };
-    caseOption = 4;
-  } else if (opt1 === '--stats' && opt2 === undefined) {
-    caseOption = 3;
-    // options = { validate: false };
-  } else if (opt1 === '--validate' && opt2 === undefined) {
-    caseOption = 2;
-    // options = { validate: true };
-  } else if (opt1 === undefined && opt2 === undefined) {
-    caseOption = 1;
-    // options = { validate: false };
+const brokenLinks = (links) => links.filter((link) => link.statusText === 'Fail').length;
+
+const uniqueLinks = (links) => {
+  const counts = {};
+  links.forEach((link) => { counts[link.href] = 1 + (counts[link.href] || 0); });
+  return Object.keys(counts).length;
+};
+
+const getStatsOfLinks = (links, message) => {
+  let stats = {};
+  if (message === 'stats') {
+    stats = { total: links.length, unique: uniqueLinks(links) };
+  } else {
+    stats = { total: links.length, unique: uniqueLinks(links), broken: brokenLinks(links) };
   }
-  return caseOption;
+  return stats;
 };
 
 
-// validate y stats => caso 4
-// stats => caso 3
-// validate => caso 2
-// nothing => caso 1
-// error => caso 0
-
-const getStatsOfLinks = (links, caseOption) => {
-  // something
+const help = {
+  usage: 'mdLinks <path> [options]',
+  where: `<path> is an absolute or relative path to a directory or a file \n
+          [options] can contain --validate, stats or be empty`,
+  example: `mdLinks <path>                      list of links found on <path>\n
+            mdLinks <path> --stats              stats of links found on <path>\n
+            mdLinks <path> --validate           status of links found on <path>\n
+            mdLinks <path> --stats --validate   stats of links found on <path> after getting the links status \n`,
 };
 
-// const mypathdir = '../test/direc1';
+const checkOptions = ({ path, opt1, opt2 }) => {
+  if (opt1 === '--validate' && opt2 === '--stats') {
+    api.mdLinks(path, { validate: true })
+      .then((result) => getStatsOfLinks(result, 'valid'))
+      .then((result) => console.table(result));
+  } else if (opt1 === '--stats' && opt2 === undefined) {
+    api.mdLinks(path)
+      .then((result) => getStatsOfLinks(result, 'stats'))
+      .then((data) => console.table(data));
+  } else if (opt1 === '--validate' && opt2 === undefined) {
+    api.mdLinks(path, { validate: true })
+      .then((result) => console.table(result));
+  } else if (opt1 === undefined && opt2 === undefined) {
+    api.mdLinks(path)
+      .then((result) => console.table(result));
+  } else {
+    console.log(help);
+  }
+};
+
 
 const CommandLineInteface = () => {
-  const [, , mypath, ...options] = process.argv;
-  let caseOption;
-  if (mypath) {
-    switch (options.length) {
-      case 0:
-        caseOption = validateCommands();
-        break;
+  const [, , ...args] = process.argv;
+  if (validatePath(args[0]) === true) {
+    switch (args.length) {
       case 1:
-        caseOption = validateCommands(options[0]);
+        checkOptions({ path: args[0] });
         break;
       case 2:
-        caseOption = validateCommands(options[0], options[1]);
+        checkOptions({ path: args[0], opt1: args[1] });
+        break;
+      case 3:
+        checkOptions({ path: args[0], opt1: args[1], opt2: args[2] });
         break;
       default:
-        console.log('numero de comandos ingresados invalido');
-    }
-  }
-  if (caseOption !== 0) {
-    if (validatePath(mypath)) {
-      console.log(caseOption);
-      switch (caseOption) {
-        case 1:
-          api.mdLinks(mypath);
-          break;
-        case 2:
-          api.mdLinks(mypath, { validate: true });
-          break;
-        case 3:
-          api.mdLinks(mypath);
-          break;
-        case 4:
-          api.mdLinks(mypath, { validate: true });
-          break;
-        default:
-          // something
-      }
+        console.log(help);
     }
   }
 };
@@ -81,5 +77,5 @@ const CommandLineInteface = () => {
 CommandLineInteface();
 
 module.exports = {
-  CommandLineInteface, validatePath, validateCommands, getStatsOfLinks,
+  CommandLineInteface, validatePath, checkOptions, getStatsOfLinks,
 };
