@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
-const isValid = require('is-valid-path');
+
+const fs = require('fs');
 
 const api = require('./api');
 
-const validatePath = (mypath) => !!(isValid(mypath));
+const existPath = (mypath) => fs.existsSync(mypath);
 
 const brokenLinks = (links) => links.filter((link) => link.statusText === 'Fail').length;
 
@@ -13,9 +14,9 @@ const uniqueLinks = (links) => {
   return Object.keys(counts).length;
 };
 
-const getStatsOfLinks = (links, message) => {
+const getStatsOfLinks = (links, pass) => {
   let stats = {};
-  if (message === 'stats') {
+  if (pass === false) {
     stats = { total: links.length, unique: uniqueLinks(links) };
   } else {
     stats = { total: links.length, unique: uniqueLinks(links), broken: brokenLinks(links) };
@@ -34,20 +35,20 @@ const help = {
             mdLinks <path> --stats --validate   stats of links found on <path> after getting the links status \n`,
 };
 
-const checkOptions = ({ path, opt1, opt2 }) => {
+const checkOptions = ({ mypath, opt1, opt2 }) => {
   if (opt1 === '--validate' && opt2 === '--stats') {
-    api.mdLinks(path, { validate: true })
-      .then((result) => getStatsOfLinks(result, 'valid'))
+    api.mdLinks(mypath, { validate: true })
+      .then((result) => getStatsOfLinks(result, true))
       .then((result) => console.table(result));
   } else if (opt1 === '--stats' && opt2 === undefined) {
-    api.mdLinks(path)
-      .then((result) => getStatsOfLinks(result, 'stats'))
-      .then((data) => console.table(data));
+    api.mdLinks(mypath)
+      .then((result) => getStatsOfLinks(result, false))
+      .then((result) => console.table(result));
   } else if (opt1 === '--validate' && opt2 === undefined) {
-    api.mdLinks(path, { validate: true })
+    api.mdLinks(mypath, { validate: true })
       .then((result) => console.table(result));
   } else if (opt1 === undefined && opt2 === undefined) {
-    api.mdLinks(path)
+    api.mdLinks(mypath)
       .then((result) => console.table(result));
   } else {
     console.log(help);
@@ -57,7 +58,7 @@ const checkOptions = ({ path, opt1, opt2 }) => {
 
 const CommandLineInteface = () => {
   const [, , ...args] = process.argv;
-  if (validatePath(args[0]) === true) {
+  if (existPath(args[0]) === true) {
     switch (args.length) {
       case 1:
         checkOptions({ path: args[0] });
@@ -77,5 +78,5 @@ const CommandLineInteface = () => {
 CommandLineInteface();
 
 module.exports = {
-  CommandLineInteface, validatePath, checkOptions, getStatsOfLinks,
+  CommandLineInteface, checkOptions, getStatsOfLinks, existPath,
 };
