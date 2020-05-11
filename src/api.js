@@ -1,12 +1,11 @@
+/* eslint linebreak-style: ["error", "windows"] */
 
 const fs = require('fs');
 const path = require('path');
 const showdown = require('showdown');
 const jsdom = require('jsdom');
 
-
 const converter = new showdown.Converter();
-
 const { JSDOM } = jsdom;
 const fetch = require('node-fetch');
 
