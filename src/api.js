@@ -12,17 +12,27 @@ const fetch = require('node-fetch');
 
 let slash = '';
 
-const makeHttpRequest = (link) => fetch(link.href)
-  .then((response) => ({
-    file: link.file,
-    href: link.href,
-    text: link.text,
-    status: response.status,
-    statusText: (response.statusText !== 'OK') ? 'Fail' : 'Ok',
-  }));
+// const makeHttpRequest = (link) => fetch(link.href)
+//   .then((response) => ({
+//     file: link.file,
+//     href: link.href,
+//     text: link.text,
+//     status: response.status,
+//     statusText: (response.statusText !== 'OK') ? 'Fail' : 'Ok',
+//   }));
 
+const makeHttpRequest = (links) => new Promise((resolve, reject) => {
+  resolve(Promise.all(links.map((link) => fetch(link.href)
+    .then((response) => ({
+      file: link.file,
+      href: link.href,
+      text: link.text,
+      status: response.status,
+      statusText: (response.statusText !== 'OK') ? 'Fail' : 'Ok',
+    })))));
+  reject(new Error('Hubo error de conexion'));
+});
 
-const validateLinks = (link) => makeHttpRequest(link);
 
 const truncateText = (text) => ((text.length > 50) ? text.substr(0, 50) : text);
 
@@ -56,18 +66,32 @@ const getFilePaths = (mypath) => {
 
 const existPath = (mypath) => fs.existsSync(mypath);
 
-const mdLinks = (mypath, option) => {
-  const absolutePath = (!path.isAbsolute(mypath)) ? path.resolve(mypath) : mypath;
-  const allFiles = getAllMarkdownFiles(absolutePath).reduce((a, f) => a.concat(f), []);
-  const markdownFiles = allFiles.filter(isMarkdownFile);
-  const linksPerFile = Promise.all(markdownFiles.map(getLinks))
-    .then((data) => data.reduce((a, f) => a.concat(f), []))
-    .then((files) => ((option !== undefined && option.validate === true)
-      ? Promise.all(files.map((file) => validateLinks(file)))
-      : files));
-  return linksPerFile;
-};
+const getSlash = (mypath) => ((mypath.includes('/') === true) ? '/' : '\\');
+
+const getAbsolutePath = (mypath) => ((path.isAbsolute(mypath) === true)
+  ? mypath
+  : path.resolve(mypath));
+
+
+const mdLinks = (mypath, option) => new Promise((resolve, reject) => {
+  const absolutePath = getAbsolutePath(mypath);
+  if (existPath(absolutePath) === true) {
+    slash = getSlash(absolutePath);
+    const filePaths = concatenate(getFilePaths(absolutePath));
+    const markdownFiles = filePaths.filter(isMarkdownFile);
+    const linksPerFile = concatenate(markdownFiles.map(getLinks));
+    if (option.validate === true) {
+      // resolve(Promise.all(linksPerFile.map((links) => makeHttpRequest(links))));
+      // promise.then((data) => console.log(data));
+      resolve(makeHttpRequest(linksPerFile));
+    } else {
+      resolve(linksPerFile);
+    }
+  } else {
+    reject(new Error('The path entered not exist!!'));
+  }
+});
 
 module.exports = {
-  mdLinks,
+  mdLinks, existPath, isMarkdownFile, getFilePaths, truncateText, getAbsolutePath, getSlash, makeHttpRequest,
 };
