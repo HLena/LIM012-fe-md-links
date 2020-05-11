@@ -10,6 +10,7 @@ const converter = new showdown.Converter();
 const { JSDOM } = jsdom;
 const fetch = require('node-fetch');
 
+let slash = '';
 
 const makeHttpRequest = (link) => fetch(link.href)
   .then((response) => ({
@@ -44,14 +45,16 @@ const isMarkdownFile = (mypath) => {
   return file.endsWith('.md');
 };
 
+const concatenate = (data) => data.reduce((a, f) => a.concat(f), []);
 
-const getAllMarkdownFiles = (mypath) => {
+const getFilePaths = (mypath) => {
   const file = fs.lstatSync(mypath);
   return (file.isFile())
     ? [mypath]
-    : fs.readdirSync(mypath).map((route) => getAllMarkdownFiles(`${mypath}/${route}`).reduce((a, f) => a.concat(f), []));
+    : fs.readdirSync(mypath).map((route) => concatenate(getFilePaths(`${mypath}${slash}${route}`)));
 };
 
+const existPath = (mypath) => fs.existsSync(mypath);
 
 const mdLinks = (mypath, option) => {
   const absolutePath = (!path.isAbsolute(mypath)) ? path.resolve(mypath) : mypath;

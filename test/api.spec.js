@@ -1,86 +1,93 @@
 
-// const api = require('../src/api.js');
+// const fetch = require('node-fetch');
 
-// const outputLinks = [
-//   { text: 'Node.js', href: 'https://nodejs.org/', file: '../src/example.md' },
-//   { text: 'md-links', href: 'https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg', file: '../src/example.md' },
-//   { text: 'Node.js', href: 'https://developers.google.com/v8/', file: '../src/example.md' },
-//   { text: 'motor de JavaScript V8 de Chrome', href: 'https://developers.google.com/v8/', file: '../src/example.md' },
-// ];
+const api = require('../src/api.js');
 
-// const outputLinks_validate = [
-//   {
-//     text: 'Node.js',
-//     href: 'https://nodejs.org/',
-//     file: '../src/example.md',
-//     status: 200,
-//     statusLabel: 'ok',
-//   },
-//   {
-//     text: 'md-links',
-//     href: 'https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg',
-//     file: '../src/example.md',
-//     status: 200,
-//     statusLabel: 'ok',
-//   },
-//   {
-//     text: 'Node.js',
-//     href: 'https://developers.google.com/v8/',
-//     file: '../src/example.md',
-//     status: 200,
-//     statusLabel: 'failed',
-//   },
-//   {
-//     text: 'motor de JavaScript V8 de Chrome',
-//     href: 'https://developers.google.com/v8/',
-//     file: '../src/example.md',
-//     status: 200,
-//     statusLabel: 'ok',
-//   },
-// ];
+const mockData = require('./mockData');
 
-// const stats = { total: 4, unique: 4 };
-// const stats_validate = { total: 4, unique: 4, broken: 0 };
+const fetch = require('../src/__mocks__/node-fetch');
 
-// describe('mdlikns', () => {
-//   it('recive a valid path (../src/example.md) and return an array of objects', (done) => {
-//     // const mypath = '../src/example.md';
-//     function callback(mypath, options) {
-//       try {
-//         expect(api.mdLinks(mypath, options)).toBe('object');
-//         done();
-//       } catch (error) {
-//         done(error);
-//       }
-//     }
-//     api.mdLinks(callback('../src/example.md', { validate: true }));
-//   });
-// });
+// jest.mock('node-fetch', () => jest.fn());
+// const {response} = jest.requireActual('node-fetch');
+
+describe('function existPath return true when the path exists and false in other way', () => {
+  it('return true when path is /home/ghlena/desktop/laboratoria/', () => {
+    expect(api.existPath('/home/ghlena/Desktop/laboratoria/')).toBe(true);
+  });
+  it('return false when path is /home/ghlena/desktop.algo/laboratoria/', () => {
+    expect(api.existPath('/home/ghlena/desktop.algo/laboratoria/')).toBe(false);
+  });
+});
+
+describe('function truncateText', () => {
+  it('return a string', () => {
+    expect(typeof api.truncateText('text')).toBe('string');
+  });
+  it('return a string of 50 characters maximun', () => {
+    expect(api.truncateText('https://user-images.githubusercontent.com/110297/42118443-b7a5f1f0-7bc8-11e8-96ad-9cc5593715a6.jpg'))
+      .toEqual('https://user-images.githubusercontent.com/110297/4');
+  });
+});
+
+describe('functions getAbsolutePath and convertPath', () => {
+  it('return an absolute path to "./test/direc1/md2.md" ', () => {
+    const absolutePath = '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md';
+    expect(api.getAbsolutePath('./test/direc1/md2.md')).toEqual(absolutePath);
+  });
+});
+
+describe('function getSlash', () => {
+  it('return \\ to ".\\test\\direc1\\md2.md"', () => {
+    expect(api.getSlash('.\\test\\direc1\\md2.md')).toEqual('\\');
+  });
+  it('return / to "./test/direc1/md2.md"', () => {
+    expect(api.getSlash('./test/direc1/md2.md')).toEqual('/');
+  });
+});
 
 
-// const mocks = [];
-// //  test con paths y opciones validos
-// describe('return a list of a links', () => {
-//   it('mdlinks should be a function', () => {
-//     expect(api.mdLinks()).toBe(mocks);
-//   });
-// });
+describe('mdlikns', () => {
+  const directoryPath = './test/direc1';
+  const filePath = './test/direc1/md2.md';
+  it('should be a function', () => {
+    expect(typeof api.mdLinks).toBe('function');
+  });
+  it('should return an object', () => api.mdLinks(directoryPath, { validate: false })
+    .then((result) => expect(typeof result).toBe('object')));
+  it('recive a directory path (./test/direc1/md2.md) and validate:false return an array of objects{file, href, text}',
+    () => api.mdLinks(filePath, { validate: false })
+      .then((result) => expect(result).toEqual(mockData.links)));
+  it('recive a nonexistent path (./test/directorio/direc) ', () => api.mdLinks('./test/directorio/direc', { validate: false })
+    .catch((error) => expect(error).toEqual(new Error('The path entered not exist!!'))));
+});
 
 
-// // indentificar si es archivo.md o un directorio
-// describe('check is path is a file.md', () => {
-//   it('isMarkcownFile should return true to file.md', () => {
-//     expect(api.mdLinks.isMarkdownFile()).toBe(true);
-//   });
-//   it('isMarkcownFile should return false to file.txt or others types', () => {
-//     expect(api.mdLinks.isMarkdownFile()).toBe(false);
-//   });
-// });
+describe('makeHttpRequest', () => {
+  afterEach(() => {
+    fetch.restore();
+    fetch.reset();
+  });
+  it('mdlinks should be a function', () => {
+    expect(typeof api.makeHttpRequest).toBe('function');
+  });
+  it('return an object {file, href, text, status, statusText } with tha state of a link', (done) => {
+    fetch
+      .mock('https://es.wikipedia.org/wiki/Markdown', { status: 200, statusText: 'OK' })
+      .mock('https://nodejs.org/', { status: 200, statusText: 'OK' })
+      .mock('https://nodejs.org/es/', { status: 200, statusText: 'OK' })
+      .mock('https://developers.google.com/v8/', { status: 200, statusText: 'OK' })
+      .mock('https://nodejs.org/es/ths', { status: 404, statusText: 'Not Found' });
 
-
-// // lee el archivo .md para extraer su contenido
-// // describe('Read File MD retorna un array de objetos[{href, text, file}]', () => {
-// //   it('readFileMd should return an array of objects ', () => {
-// //     expect(mdLinks.getLinks()).toEqual('array');
-// //   });
-// // });
+    api.makeHttpRequest(mockData.links).then((response) => {
+      expect(response).toEqual(mockData.linksValidated);
+      done();
+    });
+    // for (let i = 0; i < mockData.links.length; i += 1) {
+    //   api.makeHttpRequest(mockData.links[i])
+    //     .then((response) => {
+    //       expect(response).toEqual(mockData.linksValidated[i]);
+    //       done();
+    //     });
+    // }
+  });
+});

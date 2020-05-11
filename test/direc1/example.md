@@ -25,5 +25,5 @@ interactuar con el sistema en sí, archivos, redes, ...
 
 En este proyecto nos alejamos un poco del navegador para construir un programa
 que se ejecute usando Node.js, donde aprenderemos sobre cómo interactuar con el
-[Link](https://nodejs.org/es/ths) 
+[Link fallido](https://nodejs.org/es/ths) 
 sistema archivos, con el entorno (_proceso_, _env_, _stdin/stdout/stderr_), ...
