@@ -1,51 +1,84 @@
+#!/usr/bin/env node
 /* eslint-disable no-console */
-/* eslint linebreak-style: ["error", "windows"] */
+const chalk = require('chalk');
 
-const api = require('./api');
-const stats = require('./util');
+const api = require('./mdLinks');
+const { getBroken, getUnique } = require('./utils');
 
 const printStats = (data) => {
   if (data.broken !== undefined) {
-    console.log(`#total:${data.total}`, `#Unique:${data.unique}`, `#Broken:${data.broken}`);
+    console.log(`${chalk.green.bold('#total')}:${data.total}`,
+      `${chalk.green.bold('#Unique')}:${data.unique}`,
+      `${chalk.red.bold('#Broken')}:${data.broken}`);
   } else {
-    console.log(`#total:${data.total}`, `#Unique:${data.unique}`);
+    console.log(`${chalk.green.bold('#total')}:${data.total}`, `${chalk.green.bold('#Unique')}:${data.unique}`);
   }
 };
-const help = `
-  usage: mdLinks <path> [options],
-  where: <path> is an absolute or relative path to a directory or a file \n
-          [options] can contain --validate, stats or be empty,
-  example: mdLinks <path>                      list of links found on <path>\n
-            mdLinks <path> --stats              stats of links found on <path>\n
-            mdLinks <path> --validate           status of links found on <path>\n
-            mdLinks <path> --stats --validate   stats of links found on <path> after getting the links status \n`;
 
-const CommandLineInteface = ({ path, opt1, opt2 }) => {
+const printLinks = (links) => {
+  links.forEach((link) => {
+    if (link.status === undefined) {
+      console.log(`${chalk.yellow.bold(link.file)}`,
+        `${chalk.green.bold(link.href)}`,
+        `${chalk.white.bold(link.text)}`);
+    } else {
+      console.log(`${chalk.yellow.bold(link.file)}`,
+        `${chalk.green.bold(link.href)}`,
+        `${chalk.white.bold(link.text)}`,
+        `${link.status}`,
+        `${link.statusText}`);
+    }
+  });
+};
+const help = `
+  ${chalk.green.bold('Usage:')} md-links ${chalk.yellow.bold('<path>')} ${chalk.blue.bold('[options]')},
+  ${chalk.green.bold('Where:')} ${chalk.yellow.bold('<path>')} is an absolute or relative path of a directory or a file \n
+        ${chalk.blue.bold('[options]')} can contain --validate, stats or be empty,\n
+        ${chalk.green.bold('Examples:')} mdLinks ${chalk.yellow.bold('<path>')}                      get list of links\n
+        mdLinks ${chalk.yellow.bold('<path>')} --stats              get stats of links\n
+        mdLinks ${chalk.yellow.bold('<path>')} --validate           get status of links \n
+        mdLinks ${chalk.yellow.bold('<path>')} --stats --validate   get stats of links after getting the links status \n`;
+
+const callMdLinks = (path, option, stats) => {
+  const promise = api.mdLinks(path, option);
+  promise
+    .catch((err) => console.log(`${chalk.red.bold(err.message)}`))
+    .then((result) => {
+      let data = {};
+      if (stats === 'stats') {
+        printStats(data);
+      } else if (stats === 'validateStats') {
+        data = { total: result.length, unique: getUnique(result), broken: getBroken(result) };
+        printStats(data);
+      } else {
+        printLinks(result);
+      }
+    });
+};
+
+const CLI = ({ path, opt1, opt2 }) => {
   if ((opt1 === '--validate' && opt2 === '--stats') || (opt1 === '--stats' && opt2 === '--validate')) {
-    api.mdLinks(path, { validate: true })
-      .catch((err) => console.log(err.message))
-      .then((result) => stats.getStatsOfLinks(result, true))
-      .then((result) => printStats(result));
+    callMdLinks(path, { validate: true }, 'validateStats');
   } else if (opt1 === '--stats') {
-    api.mdLinks(path, { validate: false })
-      .catch((err) => console.log(err.message))
-      .then((result) => stats.getStatsOfLinks(result, false))
-      .then((result) => printStats(result));
+    callMdLinks(path, { validate: false }, 'stats');
   } else if (opt1 === '--validate') {
-    api.mdLinks(path, { validate: true })
-      .catch((err) => console.log(err.message))
-      .then((result) => console.log(result));
+    callMdLinks(path, { validate: true });
   } else if (opt1 === undefined && opt2 === undefined) {
-    api.mdLinks(path, { validate: false })
-      .catch((err) => console.log(err.message))
-      .then((result) => console.log(result));
+    callMdLinks(path, { validate: false });
   } else {
     console.log(help);
   }
 };
+
 const [, , ...args] = process.argv;
 if (args.length < 4) {
-  CommandLineInteface({ path: args[0], opt1: args[1], opt2: args[2] });
+  if (args[0] === '--help' || args[0] === '-h') {
+    console.log(help);
+  } else if (args[0] === undefined) {
+    console.log(help);
+  } else {
+    CLI({ path: args[0], opt1: args[1], opt2: args[2] });
+  }
 } else {
   console.log(help);
 }
