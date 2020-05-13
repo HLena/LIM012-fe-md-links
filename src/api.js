@@ -11,21 +11,8 @@ const fetch = require('node-fetch');
 
 let slash = '';
 
-// const makeHttpRequest = (link) => fetch(link.href)
-//   .then((response) => ({
-//     file: link.file,
-//     href: link.href,
-//     text: link.text,
-//     status: response.status,
-//     statusText: (response.statusText !== 'OK') ? 'Fail' : 'Ok',
-//   }));
-
-const makeHttpRequest = (links) => new Promise((resolve, reject) => {
-  resolve(Promise.all(links.map((link) => fetch(link.href)
-    .then((response) => ({
-      file: link.file,
-      href: link.href,
-      text: link.text,
+const makeHttpRequest = (url) => fetch(url)
+  .then((response) => ({
       status: response.status,
       statusText: (response.statusText !== 'OK') ? 'Fail' : 'Ok',
     })))));
