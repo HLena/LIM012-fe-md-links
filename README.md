@@ -5,6 +5,10 @@
 Markdown Links es una libreria que extrae y valída links extraidos de un archivo Markdow o directorio que contenga archivos de este mismo tipo.
 
 ## Diagrama de Flujo
+### CLI
+![CLI](./img/cli.png)
+### API(MdLinks)
+![MdLinks](./img/mdLinks.png)
 
 ## Board del proyecto
 

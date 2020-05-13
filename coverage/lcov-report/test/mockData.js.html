@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -119,11 +119,11 @@
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
+<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -174,87 +174,75 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">const links = [
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">&nbsp;
+const linksValidated = [
   {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://es.wikipedia.org/wiki/Markdown',
-    text: 'Markdown',
+    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+    href: 'https://atom.io/',
+    status: 200,
+    statusText: 'Ok',
+    text: 'Atom',
   },
   {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://nodejs.org/',
-    text: 'Node.js',
+    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+    href: 'https://code.visualstudio.com/',
+    status: 200,
+    statusText: 'Ok',
+    text: 'Code',
   },
   {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://nodejs.org/es/',
-    text: 'Node.js',
+    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+    href: 'https://github.com/Laboratoria/bootcamp/tree/master/topics/shell',
+    status: 200,
+    statusText: 'Ok',
+    text: 'UNIX Shell',
   },
   {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://developers.google.com/v8/',
-    text: 'motor de JavaScript V8 de Chrome',
-  },
-  {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://nodejs.org/es/ths',
-    text: 'Link',
+    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+    href: 'https://github.com/Laboratoria/bootcamp/e/master/topics/scm/01-git',
+    status: 404,
+    statusText: 'Fail',
+    text: 'git',
   },
 ];
 &nbsp;
-const linksValidated = [
+const links = [
   {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://es.wikipedia.org/wiki/Markdown',
-    text: 'Markdown',
-    status: 200,
-    statusText: 'Ok',
+    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+    href: 'https://atom.io/',
+    text: 'Atom',
   },
   {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://nodejs.org/',
-    text: 'Node.js',
-    status: 200,
-    statusText: 'Ok',
+    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+    href: 'https://code.visualstudio.com/',
+    text: 'Code',
   },
   {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://nodejs.org/es/',
-    text: 'Node.js',
-    status: 200,
-    statusText: 'Ok',
+    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+    href: 'https://github.com/Laboratoria/bootcamp/tree/master/topics/shell',
+    text: 'UNIX Shell',
   },
   {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://developers.google.com/v8/',
-    text: 'motor de JavaScript V8 de Chrome',
-    status: 200,
-    statusText: 'Ok',
-  },
-  {
-    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc1/md2.md',
-    href: 'https://nodejs.org/es/ths',
-    text: 'Link',
-    status: 200,
-    statusText: 'Ok',
+    file: '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+    href: 'https://github.com/Laboratoria/bootcamp/e/master/topics/scm/01-git',
+    text: 'git',
   },
 ];
-module.exports = { links, linksValidated };
+&nbsp;
+const files = [
+  '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/direc1/direc2/file2.md',
+  '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/direc1/direc2/text.txt',
+  '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/direc1/file1.md',
+  '/home/ghlena/Desktop/laboratoria/LIM012-fe-md-links/test/direc/file.md',
+];
+module.exports = { links, linksValidated, files };
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -262,7 +250,7 @@ module.exports = { links, linksValidated };
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sun May 10 2020 20:57:38 GMT-0500 (Peru Standard Time)
+                at Tue May 12 2020 20:47:23 GMT-0500 (Peru Standard Time)
             </div>
         </div>
         <script src="../prettify.js"></script>
