@@ -2,23 +2,22 @@
   "name": "md-links",
   "version": "1.0.0",
   "description": "md-links es una libreria que lee archivos Markdown y extrae los links que este contiene para validarlos",
-  "main": "scr/mdLinks.js",
-  "bin": {
-    "md-links": "src/cli.js"
-  },
+  "main": "src/mdLinks.js",
+  "bin": "src/cli.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "jest --verbose --coverage",
-    "deploy": "gh-pages -d src"
+    "build":"node mdLinks.js",
+    "test": "jest --coverage",
+    "prepublish": "npm run test"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/HLena/LIM012-fe-md-links.git"
   },
   "author": "Elena Gordillo",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/HLena/LIM012-fe-md-links/issues"
   },
