@@ -1,5 +1,5 @@
 {
-  "name": "lim012-fe-md-links",
+  "name": "md-links",
   "version": "1.0.0",
   "description": "md-links es una libreria que lee archivos Markdown y extrae los links que este contiene para validarlos",
   "main": "scr/mdLinks.js",
