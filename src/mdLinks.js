@@ -62,7 +62,7 @@ const mdLinks = (mypath, option) => new Promise((resolve, reject) => {
       resolve(allLinks);
     }
   } else {
-    reject(new Error('The path entered not exist!!'));
+    reject(new Error(`The path "${mypath}" is incorrect!!`));
   }
 });
 
