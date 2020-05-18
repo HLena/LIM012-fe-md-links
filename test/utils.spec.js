@@ -2,7 +2,7 @@
 const {
   truncateText, existPath, getSlash, getAbsolutePath, isMarkdownFile, getUnique, getBroken,
 } = require('../src/utils');
-const mockData = require('./mockData');
+const mockData = require('../src/_mocks_/mockData');
 
 describe('getStatsOfLinks function', () => {
   it('return {total, unique} to getStatsOfLinks(outputLinks, false)', () => {

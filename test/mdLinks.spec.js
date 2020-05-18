@@ -1,10 +1,10 @@
-// const fetch = require('node-fetch');
-const mockData = require('./mockData');
+const fetch = require('../src/_mocks_/node-fetch');
 
 const {
   mdLinks, getLinks, getFilePaths, concatenate, makeHttpRequest,
 } = require('../src/mdLinks.js');
 
+const mockData = require('../src/_mocks_/mockData');
 
 describe('function getLinks', () => {
   it('return a list of objects {file, href, text}', () => {
@@ -21,7 +21,13 @@ describe('getFilePaths function', () => {
   });
 });
 
-describe('makeHttpRequest function', () => {
+fetch
+  .mock('https://atom.io/', 200)
+  .mock('https://code.visualstudio.com/', 200)
+  .mock('https://github.com/Laboratoria/bootcamp/tree/master/topics/shell', 200)
+  .mock('https://github.com/Laboratoria/bootcamp/e/master/topics/scm/01-git', 404);
+
+describe('mocking node-fetch', () => {
   it('Promise', (done) => {
     makeHttpRequest(mockData.links)
       .then((value) => {
@@ -38,12 +44,6 @@ describe('mdlikns on Linux', () => {
   it('return an object', () => mdLinks(directoryPath, { validate: false })
     .then((result) => expect(typeof result).toBe('object')));
 
-  // it('To ./test/direc/ and validate:false return an array of objects{file, href, text}', () => {
-  //   mdLinks(filePath, { validate: false })
-  //     .then((result) => {
-  //       expect(result).toEqual(mockData.links);
-  //     });
-  // });
 
   it('To ./test/direc/ and validate:false return an array of objects{file, href, text}', () => {
     mdLinks(filePath, { validate: true })
@@ -53,5 +53,5 @@ describe('mdlikns on Linux', () => {
   });
 
   it('To "./test/directorio/direc) recive an error" ', () => mdLinks('./test/directorio/direc', { validate: false })
-    .catch((error) => expect(error).toEqual(new Error('The path entered not exist!!'))));
+    .catch((error) => expect(error).toEqual(new Error('The path "./test/directorio/direc" is incorrect!!'))));
 });
