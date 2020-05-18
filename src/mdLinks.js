@@ -1,6 +1,5 @@
 
 const fs = require('fs');
-// const path = require('path');
 const showdown = require('showdown');
 const jsdom = require('jsdom');
 const fetch = require('node-fetch');
@@ -38,16 +37,15 @@ const getFilePaths = (mypath) => {
 
 
 const makeHttpRequest = (links) => {
-  const promises = links.map((link) => new Promise((resolve) => fetch(link.href)
+  const promises = links.map((link) => fetch(link.href)
     .then((res) => {
       const obj = link;
       obj.status = res.status;
       obj.statusText = (res.status >= 200 && res.status < 400) ? 'Ok' : 'Fail';
-      resolve(obj);
-    })));
+      return obj;
+    }));
   return Promise.all(promises).then((res) => res);
 };
-
 
 const mdLinks = (mypath, option) => new Promise((resolve, reject) => {
   const absolutePath = getAbsolutePath(mypath);
