@@ -7,85 +7,27 @@ Markdown Links es una libreria que extrae y valída links extraidos de un archiv
 ## Diagrama de Flujo
 ### CLI
 ![CLI](./img/cli.png)
-### API(MdLinks)
-![MdLinks](./img/mdLinks.png)
-
-## Board del proyecto
+### API(md-Links)
+![md-Links](./img/mdLinks.png)
 
 ## Documentación técnica del proyecto
+Las herramientas y dependencia utilizadas para la construccion de esta libreria son:
+
+![md-Links](./img/tec.png)
 ## Instalación de libreria
+Para instalar la libreria debe ejecutar lo siguiente
+
+```
+npm install HLena/LIM012-fe-md-links
+```
 ## Guia de Uso
 
-### API `mdLinks(path, opts)`
+### A traves de la Interfaz de Línea de Comando(CLI)
 
-- El módulo exporta una función con la interfaz (API) esperada.
-- El módulo implementa soporte para archivo individual
-- El módulo implementa soporte para directorios
-- El módulo implementa `options.validate`
-
-### CLI
-
-- Expone ejecutable `md-links` en el path (configurado en `package.json`)
-- Se ejecuta sin errores / output esperado.
-- El ejecutable implementa `--validate`.
-- El ejecutable implementa `--stats`.
-- El ejecutable implementa `--validate` y `--stats` juntos.
-
-
-Para comenzar este proyecto tendrás que hacer un _fork_ y _clonar_ este
-repositorio.
-
-#### `mdLinks(path, options)`
-
-##### Argumentos
-
-- `path`: Ruta absoluta o relativa al archivo o directorio. Si la ruta pasada es
-  relativa, debe resolverse como relativa al directorio desde donde se invoca
-  node - _current working directory_).
-- `options`: Un objeto con las siguientes propiedades:
-  * `validate`: Booleano que determina si se desea validar los links
-    encontrados.
-
-##### Valor de retorno
-
-La función debe retornar una promesa (`Promise`) que resuelva a un arreglo
-(`Array`) de objetos (`Object`), donde cada objeto representa un link y contiene
-las siguientes propiedades:
-
-- `href`: URL encontrada.
-- `text`: Texto que aparecía dentro del link (`<a>`).
-- `file`: Ruta del archivo donde se encontró el link.
-
-#### Ejemplo
-
-```js
-const mdLinks = require("md-links");
-
-mdLinks("./some/example.md")
-  .then(links => {
-    // => [{ href, text, file }]
-  })
-  .catch(console.error);
-
-mdLinks("./some/example.md", { validate: true })
-  .then(links => {
-    // => [{ href, text, file, status, ok }]
-  })
-  .catch(console.error);
-
-mdLinks("./some/dir")
-  .then(links => {
-    // => [{ href, text, file }]
-  })
-  .catch(console.error);
-```
-
-### CLI (Command Line Interface - Interfaz de Línea de Comando)
-
-El ejecutable de nuestra aplicación debe poder ejecutarse de la siguiente
+El ejecutable de la aplicaión se puede ejecutar de la siguiente
 manera a través de la terminal:
 
-`md-links <path-to-file> [options]`
+`md-links <path> [options]`
 
 Por ejemplo:
 
@@ -95,13 +37,6 @@ $ md-links ./some/example.md
 ./some/example.md https://otra-cosa.net/algun-doc.html algún doc
 ./some/example.md http://google.com/ Google
 ```
-
-El comportamiento por defecto no debe validar si las URLs responden ok o no,
-solo debe identificar el archivo markdown (a partir de la ruta que recibe como
-argumento), analizar el archivo Markdown e imprimir los links que vaya
-encontrando, junto con la ruta del archivo donde aparece y el texto
-que hay dentro del link (truncado a 50 caracteres).
-
 #### Options
 
 ##### `--validate`
@@ -112,8 +47,8 @@ URL que responde ok, entonces consideraremos el link como ok.
 
 Por ejemplo:
 
-```sh13d99df067c1
-$ md-13d99df067c1
+```sh
+$ md-link
 ./some/example.md http://algo.com/2/3/ ok 200 Link a algo
 ./some/example.md https://otra-cosa.net/algun-doc.html fail 404 algún doc
 ./some/example.md http://google.com/ ok 301 Google
@@ -144,10 +79,33 @@ Unique: 3
 Broken: 1
 ```
 
+### Como Modulo (API mdLinks)
+```
+const mdLinks = require('md-links');
+
+mdLinks("./some/example.md")
+  .then(links => {
+    // => [{ href, text, file }]
+  })
+  .catch(console.error);
+
+mdLinks("./some/example.md", { validate: true })
+  .then(links => {
+    // => [{ href, text, file, status, ok }]
+  })
+  .catch(console.error);
+
+mdLinks("./some/dir")
+  .then(links => {
+    // => [{ href, text, file }]
+  })
+  .catch(console.error);
+```
+
 ## Objetivos de aprendizaje
 
 ### Javascript
-- [x] Uso de callbacks
+- [] Uso de callbacks
 - [x] Consumo de Promesas
 - [x] Creacion de Promesas
 - [x] Modulos de Js
@@ -175,4 +133,7 @@ Broken: 1
 - [x] Modularización
 - [x] Nomenclatura / Semántica
 - [x] Linting
+
+### Autor
+Karen Elena Gordillo Viña
 
